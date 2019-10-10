@@ -55,7 +55,7 @@ submit_form(pgsession, filled_form)
 create loop
 ```{r}
 PAGE<-25
-year<-data.frame()
+f_pubyr<-data.frame()
 
 for (i in 1:25) {
   url <- paste0("https://www.goodreads.com/shelf/show/race?page=",i)
@@ -65,11 +65,16 @@ for (i in 1:25) {
   nds <- html_nodes(page, xpath = '//*[contains(concat( " ", @class, " " ), concat( " ", "greyText", " " )) and contains(concat( " ", @class, " " ), concat( " ", "smallText", " " ))]')
   pub_yr <- html_text(nds)
   pub_yr<-as.data.frame(pub_yr)
-  year<-rbind(year,pub_yr)
+  f_pubyr<-rbind(f_pubyr,pub_yr)
 }
 ```
 clean the data
 ```{r}
 #extract the year
+f_pubyr %<>% 
+  separate(pub_yr,c("rating","num_ra","year"),"—") %>%
+  separate(year,c("xxx","year"),"published")
+#trim line breaker
+trimws(pub_yr$year,which="both")
 ```
 
