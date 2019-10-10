@@ -1,0 +1,75 @@
+---
+title: "727 Final Project"
+author: "Lingxi Li"
+date: "10/7/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(xml2)
+library(rvest)
+library(robotstxt)
+library(tidyverse)
+library(magrittr)
+```
+restriction?
+```{r}
+paths_allowed("https://www.goodreads.com/shelf/show/race?page=1")
+```
+read resut from web
+```{r}
+url <- read_html("https://www.goodreads.com/shelf/show/race?page=2")
+```
+extract text including publish year
+```{r}
+nds <- html_nodes(url, xpath = '//*[contains(concat( " ", @class, " " ), concat( " ", "greyText", " " )) and contains(concat( " ", @class, " " ), concat( " ", "smallText", " " ))]')
+```
+extract further from list
+```{r}
+#transfer into dataframe
+pub_yr <- html_text(nds)
+pub_yr<-as.data.frame(pub_yr)
+head(pub_yr)
+#extract the year
+pub_yr %<>% 
+  separate(pub_yr,c("rating","num_ra","year"),"—") %>%
+  separate(year,c("xxx","year"),"published")
+#trim line breaker
+trimws(pub_yr$year,which="both")
+```
+log in
+```{r}
+#Address of the login webpage
+login<-"https://www.goodreads.com/user/sign_in?returnurl=%2Fshelf%2Fshow%2Frace%3Fpage%3D2"
+
+#create a web session with the desired login address
+pgsession<-html_session(login)
+pgform<-html_form(pgsession)[[1]]  #in this case the submit is the 2nd form
+filled_form<-set_values(pgform,'user[email]'="***", 'user[password]'= "***")
+submit_form(pgsession, filled_form)
+```
+create loop
+```{r}
+PAGE<-25
+year<-data.frame()
+
+for (i in 1:25) {
+  url <- paste0("https://www.goodreads.com/shelf/show/race?page=",i)
+  print(url)
+  page<-jump_to(pgsession, url)
+  url <- read_html(url)
+  nds <- html_nodes(page, xpath = '//*[contains(concat( " ", @class, " " ), concat( " ", "greyText", " " )) and contains(concat( " ", @class, " " ), concat( " ", "smallText", " " ))]')
+  pub_yr <- html_text(nds)
+  pub_yr<-as.data.frame(pub_yr)
+  year<-rbind(year,pub_yr)
+}
+```
+clean the data
+```{r}
+#extract the year
+```
+
