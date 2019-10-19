@@ -115,5 +115,20 @@ ggplot(rate,aes(x=tyear,y=rating))+
   coord_cartesian(ylim = c(3.75, 4.5))+
   theme(axis.text.x = element_text(angle = 90))
 ```
+Run another loop to get book names
+```{r}
+PAGE<-25
+f_rana<-data.frame()
+
+for (i in 1:PAGE) {
+  url <- paste0("https://www.goodreads.com/shelf/show/race?page=",i)
+  print(url)
+  page <- jump_to(pgsession, url)
+  nds <- html_nodes(page, xpath = '//*[contains(concat( " ", @class, " " ), concat( " ", "bookTitle", " " ))]')
+  race_name <- html_text(nds)
+  race_name <- as.data.frame(race_name)
+  f_rana <- rbind(f_rana,race_name)
+}
+```
 
 
