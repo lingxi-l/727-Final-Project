@@ -69,7 +69,7 @@ for (i in 1:PAGE) {
   f_pubyr<-rbind(f_pubyr,pub_yr)
 }
 ```
-clean the data
+clean the data for "publish year" of book about race
 ```{r}
 #view the first 6 rows
 head(f_pubyr)
@@ -84,12 +84,36 @@ Now we have a single column "year" that contains all the "publish year"
 ```{r}
 #breifly check the value of variable "year" 
 table(f_pubyr$tyear,exclude=NULL) 
-                    #29 missing because of incomplete text online                            #since frequency before 1960 all less than 3
+                    #29 missing because of incomplete text online                            
+                    #since frequency before 1960 all less than 3
 
-#line plot: filter out NA and blank
+#bar chart: Number of books about race per year
+#filter out NA and blank
 f_pubyr %<>% filter(tyear!="" & is.na(tyear)==FALSE & tyear>=1960)
 ggplot(f_pubyr,aes(tyear))+
   geom_bar()+
   theme(axis.text.x = element_text(angle = 90))
 ```
+clean the data for "rating" of book about race
+```{r}
+#trim line breaker
+f_pubyr$rating<-trimws(f_pubyr$rating,which="both")
+#extract number of rating from column "rating"
+f_pubyr$rating<-substr(f_pubyr$rating,12,15)
+```
+Now we have a single column "rating"
+```{r}
+#check value
+table(f_pubyr$rating,exclude=NULL)
+#bar chart: Average rating of books about race by year
+rate<-f_pubyr %>%
+  group_by(tyear) %>%
+  summarise(mean(as.numeric(rating))) 
+colnames(rate)[2]<-"rating"
+ggplot(rate,aes(x=tyear,y=rating))+
+  geom_bar(stat="identity")+
+  coord_cartesian(ylim = c(3.75, 4.5))+
+  theme(axis.text.x = element_text(angle = 90))
+```
+
 
