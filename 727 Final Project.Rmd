@@ -15,13 +15,15 @@ library(rvest)
 library(robotstxt)
 library(tidyverse)
 library(magrittr)
+library(ggplot2)
 ```
-restriction?
+Test if web scraping is allowed
 ```{r}
 paths_allowed("https://www.goodreads.com/shelf/show/race?page=1")
 ```
-read resut from web
+Use page2 as an example to prepare for the loop below
 ```{r}
+#Read resut from web
 url <- read_html("https://www.goodreads.com/shelf/show/race?page=2")
 ```
 extract text including publish year
@@ -41,14 +43,14 @@ pub_yr %<>%
 #trim line breaker
 trimws(pub_yr$year,which="both")
 ```
-log in
+This web requires login to loop through all pages
 ```{r}
 #Address of the login webpage
-login<-"https://www.goodreads.com/user/sign_in?returnurl=%2Fshelf%2Fshow%2Frace%3Fpage%3D2"
+login<-"https://www.goodreads.com/user/sign_in?returnurl=%2Fshelf%2Fshow%2Frace%3Fpage%3D1"
 
 #create a web session with the desired login address
 pgsession<-html_session(login)
-pgform<-html_form(pgsession)[[1]]  #in this case the submit is the 2nd form
+pgform<-html_form(pgsession)[[1]] #in this case the submit is the 1st form
 filled_form<-set_values(pgform,'user[email]'="***", 'user[password]'= "***")
 submit_form(pgsession, filled_form)
 ```
@@ -57,11 +59,10 @@ create loop
 PAGE<-25
 f_pubyr<-data.frame()
 
-for (i in 1:25) {
+for (i in 1:PAGE) {
   url <- paste0("https://www.goodreads.com/shelf/show/race?page=",i)
   print(url)
   page<-jump_to(pgsession, url)
-  url <- read_html(url)
   nds <- html_nodes(page, xpath = '//*[contains(concat( " ", @class, " " ), concat( " ", "greyText", " " )) and contains(concat( " ", @class, " " ), concat( " ", "smallText", " " ))]')
   pub_yr <- html_text(nds)
   pub_yr<-as.data.frame(pub_yr)
@@ -70,11 +71,25 @@ for (i in 1:25) {
 ```
 clean the data
 ```{r}
+#view the first 6 rows
+head(f_pubyr)
 #extract the year
 f_pubyr %<>% 
   separate(pub_yr,c("rating","num_ra","year"),"—") %>%
-  separate(year,c("xxx","year"),"published")
+  separate(year,c("xxx","year"),"published")  #all "missing pieces" from the warning message is the text misscraped that does not include "publish year"
 #trim line breaker
-trimws(pub_yr$year,which="both")
+f_pubyr$tyear<-trimws(f_pubyr$year,which="both")
+```
+Now we have a single column "year" that contains all the "publish year"
+```{r}
+#breifly check the value of variable "year" 
+table(f_pubyr$tyear,exclude=NULL) 
+                    #29 missing because of incomplete text online                            #since frequency before 1960 all less than 3
+
+#line plot: filter out NA and blank
+f_pubyr %<>% filter(tyear!="" & is.na(tyear)==FALSE & tyear>=1960)
+ggplot(f_pubyr,aes(tyear))+
+  geom_bar()+
+  theme(axis.text.x = element_text(angle = 90))
 ```
 
