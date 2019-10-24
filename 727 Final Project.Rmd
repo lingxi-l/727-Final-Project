@@ -73,12 +73,18 @@ clean the data for "publish year" of book about race
 ```{r}
 #view the first 6 rows
 head(f_pubyr)
+#remove irrelevant rows (all irrelavent rows contains ")")
+a<-as.vector(f_pubyr$pub_yr)
+length(which(grepl(")",a)==TRUE)) #1308-58 is exactly 1250, the number of rows of clean data
+f_pubyr %<>% filter(grepl(")",a)==FALSE)
 #extract the year
 f_pubyr %<>% 
   separate(pub_yr,c("rating","num_ra","year"),"—") %>%
   separate(year,c("xxx","year"),"published")  #all "missing pieces" from the warning message is the text misscraped that does not include "publish year"
 #trim line breaker
 f_pubyr$tyear<-trimws(f_pubyr$year,which="both")
+#remove irrelevant columns
+f_pubyr <- f_pubyr[,c(-3,-4)]
 ```
 Now we have a single column "year" that contains all the "publish year"
 ```{r}
@@ -129,6 +135,10 @@ for (i in 1:PAGE) {
   race_name <- as.data.frame(race_name)
   f_rana <- rbind(f_rana,race_name)
 }
+```
+put name and year in the same dataframe
+```{r}
+f_race <- cbind(f_rana, f_pubyr)
 ```
 
 
