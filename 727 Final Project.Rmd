@@ -91,7 +91,7 @@ Now we have a single column "year" that contains all the "publish year"
 #breifly check the value of variable "year" 
 table(f_pubyr$tyear,exclude=NULL) 
                     #29 missing because of incomplete text online                            
-                    #since frequency before 1960 all less than 3
+                    #frequency before 1960 all less than 3
 
 #bar chart: Number of books about race per year
 #filter out NA and blank
@@ -140,5 +140,50 @@ put name and year in the same dataframe
 ```{r}
 f_race <- cbind(f_rana, f_pubyr)
 ```
+get the names of top 200 books from 1960 to 2019
+```{r}
+YEAR<-2019  #1960-2019
+f_top<-data.frame()
+
+for (i in 1960:YEAR) {
+  url <- paste0("https://www.goodreads.com/book/popular_by_date/",i)
+  print(url)
+  page <- jump_to(pgsession, url)
+  nds <- html_nodes(page, xpath = '//*[contains(concat( " ", @class, " " ), concat( " ", "bookTitle", " " ))]//span')
+  top_name <- html_text(nds)
+  top_name <- as.data.frame(top_name)
+  f_top <- rbind(f_top,top_name)
+}
+```
+find intersections
+```{r}
+#trim the line breaker
+f_race$race_name<-trimws(f_race$race_name,which="both")
+f_top$top_name<-trimws(f_top$top_name,which="both")
+#delet whatever is in parentheses
+f_race$race_name<-gsub("\\s*\\([^\\)]+\\)","",f_race$race_name)
+f_top$top_name<-gsub("\\s*\\([^\\)]+\\)","",f_top$top_name)
+#group the name of book of race by year
+name_y5<-f_race %>% filter(tyear==2016)
+#get intersection
+length(intersect(f_top$top_name,name_y5$race_name))
+#loop to get the number of race books among the top 200 for each year
+popular_inter <- data.frame()
+for (i in 1960:2019) {
+  year_group <- which(f_race$tyear==i)
+  intersection <- intersect(f_top$top_name,f_race$race_name[year_group])
+  intersection <- as.data.frame(length(intersection))
+  popular_inter <- rbind(popular_inter,intersection)
+}
+names(popular_inter)<-"number"
+#calculate the proportion
+popular_inter$proportion <- popular_inter$number/200
+#append column of year
+popular_inter$year <- c(1960:2019)
+#plot of the proportion
+ggplot(popular_inter,aes(x=year,y=proportion))+
+  geom_bar(stat="identity")
+```
+
 
 
