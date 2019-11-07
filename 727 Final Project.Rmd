@@ -184,6 +184,131 @@ popular_inter$year <- c(1960:2019)
 ggplot(popular_inter,aes(x=year,y=proportion))+
   geom_bar(stat="identity")
 ```
+create loop-politics
+```{r}
+PAGE<-25
+f_pubyr<-data.frame()
 
+for (i in 1:PAGE) {
+  url <- paste0("https://www.goodreads.com/shelf/show/politics?page=",i)
+  print(url)
+  page<-jump_to(pgsession, url)
+  nds <- html_nodes(page, xpath = '//*[contains(concat( " ", @class, " " ), concat( " ", "greyText", " " )) and contains(concat( " ", @class, " " ), concat( " ", "smallText", " " ))]')
+  pub_yr <- html_text(nds)
+  pub_yr<-as.data.frame(pub_yr)
+  f_pubyr<-rbind(f_pubyr,pub_yr)
+}
+```
+clean the collected data-politics
+```{r}
+#view the first 6 rows
+head(f_pubyr)
+#remove irrelevant rows (all irrelavent rows contains ")")
+f_pubyr %<>% filter(grepl(")",pub_yr)==FALSE)
+#extract the year
+f_pubyr %<>% 
+  separate(pub_yr,c("rating","num_ra","year"),"—") %>%
+  separate(year,c(NA,"year"),"published") 
+#trim line breaker
+f_pubyr$year<-trimws(f_pubyr$year,which="both")
+```
+Now we have a single column "year" that contains all the "publish year"
+```{r}
+#breifly check the value of variable "year" 
+table(f_pubyr$year,exclude=NULL) 
+                    #8 missing because of incomplete text online                            
+                    #frequency before 1960 all less than 5
+#bar chart: Number of books about politics per year
+#filter out NA and blank
+f_pubyr_60<- f_pubyr %>% filter(year!="" & is.na(year)==FALSE & year>=1960)
+ggplot(f_pubyr,aes(year))+
+  geom_bar()+
+  theme(axis.text.x = element_text(angle = 90))
+```
+clean the data for "rating" of book about politics
+```{r}
+#trim line breaker
+f_pubyr$rating<-trimws(f_pubyr$rating,which="both")
+#extract number of rating from column "rating"
+f_pubyr$rating<-substr(f_pubyr$rating,12,15)
+```
+Now we have a single column "rating"
+```{r}
+#check value
+table(f_pubyr$rating,exclude=NULL)
+#bar chart: Average rating of books about race by year
+rate<-f_pubyr %>%
+  group_by(year) %>%
+  summarise(mean(as.numeric(rating))) 
+colnames(rate)[2]<-"rating"
+ggplot(rate,aes(x=year,y=rating))+
+  geom_bar(stat="identity")+
+  coord_cartesian(ylim = c(3.5, 4.6))+
+  theme(axis.text.x = element_text(angle = 90))
+```
+Run another loop to get book names-politics
+```{r}
+PAGE<-25
+f_pona<-data.frame()
 
+for (i in 1:PAGE) {
+  url <- paste0("https://www.goodreads.com/shelf/show/politics?page=",i)
+  print(url)
+  page <- jump_to(pgsession, url)
+  nds <- html_nodes(page, xpath = '//*[contains(concat( " ", @class, " " ), concat( " ", "bookTitle", " " ))]')
+  politics_name <- html_text(nds)
+  politics_name <- as.data.frame(politics_name)
+  f_pona <- rbind(f_pona,politics_name)
+}
+```
+put name and year in the same dataframe-politics
+```{r}
+f_politics <- cbind(f_pona, f_pubyr)
+```
+find intersections
+```{r}
+#trim the line breaker
+f_politics$politics_name<-trimws(f_politics$politics_name,which="both")
+#delet whatever is in parentheses
+f_politics$politics_name<-gsub("\\s*\\([^\\)]+\\)","",f_politics$politics_name)
+#group the name of book of race by year
+name_y5<-f_politics %>% filter(year==2018)
+#get intersection
+length(intersect(f_top$top_name,name_y5$politics_name))
+#loop to get the number of race books among the top 200 for each year
+popular_inter <- data.frame()
+for (i in 1960:2019) {
+  year_group <- which(f_politics$year==i)
+  intersection <- intersect(f_top$top_name,f_politics$politics_name[year_group])
+  intersection <- as.data.frame(length(intersection))
+  popular_inter <- rbind(popular_inter,intersection)
+}
+names(popular_inter)<-"number"
+#calculate the proportion
+popular_inter$proportion <- popular_inter$number/200
+#append column of year
+popular_inter$year <- c(1960:2019)
+#plot of the proportion
+ggplot(popular_inter,aes(x=year,y=proportion))+
+  geom_bar(stat="identity")
+```
+intersection: politics and race
+```{r}
+pora_inter <- data.frame()
+for (i in 1960:2019) {
+  year_group_ra <- which(f_race$tyear==i)
+  year_group_po <- which(f_politics$year==i)
+  intersection <- intersect(f_race$race_name[year_group_ra],f_politics$politics_name[year_group_po])
+  intersection <- as.data.frame(length(intersection))
+  pora_inter <- rbind(pora_inter,intersection)
+}
+names(pora_inter)<-"number"
+#calculate the proportion
+pora_inter$proportion <- pora_inter$number/200
+#append column of year
+pora_inter$year <- c(1960:2019)
+#plot of the proportion
+ggplot(pora_inter,aes(x=year,y=proportion))+
+  geom_bar(stat="identity")
+```
 
