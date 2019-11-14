@@ -72,14 +72,14 @@ table(f_pubyr$year,exclude=NULL)
 #bar chart: Number of books about race per year
 #filter out NA and blank
 f_pubyr %>% 
-  filter(year!="") %>%
+  filter(year!="" & year!=1) %>%
   group_by(year) %>%
   summarise(total=n()) %>%
   ggplot(aes(year,total,fill=total))+
-  geom_bar(stat = "identity")+
-  scale_fill_continuous(low="light blue", high="blue")+
-  theme(axis.text.x = element_text(angle = 45))+
-  theme_minimal()
+  geom_col(width=1.3)+
+  scale_fill_continuous(low="light blue", high="steelblue")+
+  scale_x_discrete(breaks = seq(1960, 2020, by = 5)) +
+  theme(axis.text.x = element_text(angle = 45))
 ```
 clean the data for "rating" of book about race
 ```{r}
