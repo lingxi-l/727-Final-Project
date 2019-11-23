@@ -147,21 +147,21 @@ f_top$top_name<-trimws(f_top$top_name,which="both")
 f_race$race_name<-gsub("\\s*\\([^\\)]+\\)","",f_race$race_name)
 f_top$top_name<-gsub("\\s*\\([^\\)]+\\)","",f_top$top_name)
 #loop to get the number of race books among the top 200 for each year
-popular_inter <- data.frame()
+popular_inter1 <- data.frame()
 for (i in 1960:2019) {
   year_group <- which(f_race$year==i)
   intersection <- intersect(f_top$top_name,f_race$race_name[year_group])
   intersection <- as.data.frame(length(intersection))
-  popular_inter <- rbind(popular_inter,intersection)
+  popular_inter1 <- rbind(popular_inter1,intersection)
 }
-names(popular_inter)<-"number"
+names(popular_inter1)<-"number"
 #calculate the proportion
-popular_inter$proportion <- popular_inter$number/200
+popular_inter1$proportion <- popular_inter1$number/200
 #append column of year
-popular_inter$year <- c(1960:2019)
-popular_inter$year <- as.factor(popular_inter$year)
+popular_inter1$year <- c(1960:2019)
+popular_inter1$year <- as.factor(popular_inter1$year)
 #plot of the proportion
-ggplot(popular_inter,aes(x=year,y=proportion,fill=proportion))+
+ggplot(popular_inter1,aes(x=year,y=proportion,fill=proportion))+
   geom_col(width=1)+
   scale_fill_continuous(low="light blue", high="blue")+
   scale_x_discrete(breaks = seq(1960, 2020, by = 5)) +
@@ -306,6 +306,18 @@ ggplot(pora_inter,aes(x=year,y=proportion))+
 ggplot(pora_inter,aes(x=year,y=proportion,fill=proportion))+
   geom_col(width=1)+
   scale_fill_continuous(low="light blue", high="blue")+
+  scale_x_discrete(breaks = seq(1960, 2020, by = 5)) +
+  ylim(0,0.1)+
+  theme(axis.text.x = element_text(angle = 45))
+```
+Final Graph: intersection of books about race and politics with top200 booklist in the same plot
+```{r}
+popular_inter1$group<-"race"
+popular_inter$group<-"politics"
+combine<-rbind(popular_inter1, popular_inter)
+
+ggplot(combine,aes(x=year,y=proportion,group=group,color=group))+
+  geom_line()+
   scale_x_discrete(breaks = seq(1960, 2020, by = 5)) +
   ylim(0,0.1)+
   theme(axis.text.x = element_text(angle = 45))
