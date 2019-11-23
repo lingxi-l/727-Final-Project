@@ -8,14 +8,20 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+### Motivation
 
-```{r}
+
+```{r,message=FALSE}
 library(xml2)
 library(rvest)
 library(robotstxt)
 library(tidyverse)
 library(magrittr)
 ```
+### Data
+#### Source
+
+
 Test if web scraping is allowed
 ```{r}
 paths_allowed("https://www.goodreads.com/shelf/show/race?page=1")
@@ -31,7 +37,11 @@ pgform<-html_form(pgsession)[[1]] #in this case the submit is the 1st form
 filled_form<-set_values(pgform,'user[email]'="***", 'user[password]'= "***")
 submit_form(pgsession, filled_form)
 ```
-####Books about race
+
+#### Gathering
+With the consistent format of Goodread book list, web scraping method is employed to effectively gather the data for analysis. 
+
+##### Books about race
 create loop to get average rating, number of rating, published year
 ```{r}
 PAGE<-25
