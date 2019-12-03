@@ -1,33 +1,53 @@
 ---
-title: "727 Final Project"
-author: "Lingxi Li"
-date: "10/7/2019"
-output: html_document
+title: "Goodreads Data as a Measure of Issue Salience"
+author: "Kallan Larsen & Lingxi Li"
+subtitle: The Case of Race & Politics
+output:
+  pdf_document:
+    toc: yes
+    df_print: kable
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-### Motivation
+## Motivation
+Issue salience is an important aspect of studies of sociopolitical life and specifically voter behavior. “Issue voting” is a foundational theory in political science (Carmines & Stimson 1980). A political figure’s involvement in salient issues has a substantial impact on her approval ratings (Edwards et al 1995). 
 
+Not every measurement of issue salience is appropriate for every research question. Mayhew (1991) outlines this distinction temporally; measures of retrospective and contemporaneous issue salience may differ from one another. Additionally, it is important to determine whether one wants to study political elite or popular issue salience, as the sources of issue salience for each may be quite different. Whether a case concerning an issue is included in constitutional law books (Danelski 1989), for example, may be an important factor in determining the salience of that issue for those in the field of law, but not for a layperson who has never opened a constitutional law book.
 
-```{r,message=FALSE}
+The issues that are salient to political elites (e.g., legislators, justices, and other politicians) may have a notable effect on policies that are put into place. Popular salience, however, can both influence political elites and be influenced by new policies enacted by political elites. In Epstein and Segal’s (2000) study of issue salience to US Supreme Court justices, they use media coverage to measure issue salience. This may be a rare source that could measure issue salience for all consumers of media, regardless of whether they are politicians or not. Indeed, many researchers continue to analyze media coverage of Donald Trump and Hillary Clinton leading up to the 2016 US Presidential Election. However, using media coverage as a measures of issue salience requires heroic assumptions regarding uniform media exposure -- people do not read, watch, or listen to the same news sources, let alone the same stories, for the same amount of time each day, so stimuli vary immensely.
+
+Many political polls ask voters to report the most important issue to them, but Bartle & Laycock (2012) find limited evidence that these measures actually influence voting behavior. They posit that respondents are reporting what they observe as being important to other voters, not necessarily what is most important for them personally. Found data such as Twitter data can be used to get a real-time picture of popular sentiment regarding candidates and political issues, but tweets can be sent out in a matter of seconds and therefore may not represent crystallized issue salience.
+
+## Research Question
+How salient are the issues of race and politics to the public, and how has the salience of these topics changed over time? Does the popularity of books about race correspond with important events pertaining to race in the United States, and/or does the popularity of books about politics correspond with important political events in the United States? To what extent does the popularity of books about race and politics overlap?
+
+## Data
+### Source
+In this paper, we use a measure of issue salience that, to our knowledge, has never been used for this purpose: Goodreads data. Goodreads is a social networking website that allows users to flag books they have read or want to read and post reviews and ratings of the books. As of July 2019, Goodreads had more than 90 million users, more than 10 million books added to its online catalogs, 50 million unique visitors per month, and more than 50 million user reviews.  Users can also “tag” books, a feature that is used to mark books as being part of a certain genre or being about certain topics, among others. Goodreads compiles lists of books that share a tag, which makes comparisons of books that share characteristics fairly convenient. It is these lists that we use to measure issue salience.
+
+Our use of Goodreads data is limited -- we cannot refine ratings to include only readers from a specific location (country), we cannot tell whether someone who rated a book actually read the book, and we cannot limit our data to books published in the United States. Accessing demographic data about Goodreads users is also difficult. However, we argue that the nature of Goodreads data is such that falsifying whether or not one has read a book is not incentivized; Goodreads ratings do not seem to have a large enough of an impact on the book industry for falsifying reviews to be as common as it might be on, for example, business reviewing sites such as Yelp.
+
+Publishers often share the most popular genres of books each year, but this is usually based on book sales, not reader opinions, and genres are not crystallized enough to be informative about issue salience. For example, there could be both novels and non-fiction books making powerful statements about race in a given year, but publisher data does not reflect that. Goodreads allows books from all publishers to be gathered in one place, and topics are available on a more granular level, although we have to rely on users to tag books as being about the topics of interest.
+
+We cannot see when books were read in this data, which poses a bigger problem for older books than newer books. For example, if someone read To Kill a Mockingbird in 2015, any rating shift in To Kill a Mockingbird would affect the results for 1960 (the year the book was published), not 2015. For this reason, observing the fraction of books about a specified topic that are listed in the top 200 book of the year is important.
+
+### Gathering
+```{r, include=FALSE}
 library(xml2)
 library(rvest)
 library(robotstxt)
 library(tidyverse)
 library(magrittr)
 ```
-### Data
-#### Source
 
-
-Test if web scraping is allowed
-```{r}
+```{r, include=FALSE}
+#Test if web scraping is allowed
 paths_allowed("https://www.goodreads.com/shelf/show/race?page=1")
-```
-This web requires login to loop through all pages
-```{r}
+
+#Goodreads requires login to loop through all pages
 #Address of the login webpage
 login<-"https://www.goodreads.com/user/sign_in?returnurl=%2Fshelf%2Fshow%2Frace%3Fpage%3D1"
 
@@ -37,28 +57,38 @@ pgform<-html_form(pgsession)[[1]] #in this case the submit is the 1st form
 filled_form<-set_values(pgform,'user[email]'="***", 'user[password]'= "***")
 submit_form(pgsession, filled_form)
 ```
+We utilized SelectorGadget to scrape three lists found on Goodreads: books about Race, books about Politics, and the top 200 books published in years 1960-2015. The first two lists have the 1250 books that have been “shelved as” (tagged as) the topic of interest the highest number of times. For example, the number one book on the race list is Between the World and Me by Ta-Nehesi Coates, which has been tagged as “race” 1023 times. On each of these lists, we have the names of the books, their authors, the average rating of the books (with a maximum rating of 5.0), the number of ratings, and the year published.
 
-#### Gathering
-With the consistent format of Goodread book list, web scraping method is employed to effectively gather the data for analysis. 
+Using R, we parsed the scraped data to create a dataset consisting of each of the metrics listed above as unique variables. We used text matching to match books that appear one more than one of the lists to analyze overlap. Our major variables of interest were 1) the number of books about race and politics over time, 2) the average rating of books about race and politics each year, 3) the proportion of the top 200 popular books from each year that were about race and politics, and 4) the overlap these measures with books tagged as both race and politics.
 
-##### Books about race
-create loop to get average rating, number of rating, published year
-```{r}
+#### List1: Books about race
+```{r, message=FALSE}
+#create loop to get average rating, number of rating, published year
 PAGE<-25
 f_pubyr<-data.frame()
-
 for (i in 1:PAGE) {
   url <- paste0("https://www.goodreads.com/shelf/show/race?page=",i)
-  print(url)
   page<-jump_to(pgsession, url)
   nds <- html_nodes(page, xpath = '//*[contains(concat( " ", @class, " " ), concat( " ", "greyText", " " )) and contains(concat( " ", @class, " " ), concat( " ", "smallText", " " ))]')
   pub_yr <- html_text(nds)
   pub_yr<-as.data.frame(pub_yr)
   f_pubyr<-rbind(f_pubyr,pub_yr)
 }
+#create a loop to get book names
+PAGE<-25
+f_rana<-data.frame()
+for (i in 1:PAGE) {
+  url <- paste0("https://www.goodreads.com/shelf/show/race?page=",i)
+  page <- jump_to(pgsession, url)
+  nds <- html_nodes(page, xpath = '//*[contains(concat( " ", @class, " " ), concat( " ", "bookTitle", " " ))]')
+  race_name <- html_text(nds)
+  race_name <- as.data.frame(race_name)
+  f_rana <- rbind(f_rana,race_name)
+}
 ```
-clean the data to get the "publish year"
-```{r}
+
+```{r, include=FALSE}
+#clean the data to get the "publish year"
 #view the first 6 rows
 head(f_pubyr)
 #remove irrelevant rows (all irrelavent rows contains ")")
@@ -71,18 +101,114 @@ f_pubyr %<>%
   separate(year,c(NA,"year"),"published")  #all "missing pieces" from the warning message is the text misscraped that does not include "publish year"
 #trim line breaker
 f_pubyr$year<-trimws(f_pubyr$year,which="both")
-```
-Now we have a single column "year" that contains all the "publish year"
-```{r}
 #breifly check the value of variable "year" 
 table(f_pubyr$year,exclude=NULL) 
                     #29 missing because of incomplete text online                            
                     #frequency before 1960 all less than 3
+#clean the data for "rating" of book about race
+#trim line breaker
+f_pubyr$rating<-trimws(f_pubyr$rating,which="both")
+#extract number of rating from column "rating"
+f_pubyr$rating<-substr(f_pubyr$rating,12,15)
+```
 
+```{r}
+#put name and year into the same dataframe
+f_race <- cbind(f_rana, f_pubyr)
+#trim the line breaker
+f_race$race_name<-trimws(f_race$race_name,which="both")
+#delet whatever is in parentheses
+f_race$race_name<-gsub("\\s*\\([^\\)]+\\)","",f_race$race_name)
+```
+
+```{r, include=FALSE}
+### List2: Books about politics
+PAGE<-25
+f_pubyr2<-data.frame()
+
+for (i in 1:PAGE) {
+  url <- paste0("https://www.goodreads.com/shelf/show/politics?page=",i)
+  print(url)
+  page<-jump_to(pgsession, url)
+  nds <- html_nodes(page, xpath = '//*[contains(concat( " ", @class, " " ), concat( " ", "greyText", " " )) and contains(concat( " ", @class, " " ), concat( " ", "smallText", " " ))]')
+  pub_yr <- html_text(nds)
+  pub_yr<-as.data.frame(pub_yr)
+  f_pubyr2<-rbind(f_pubyr2,pub_yr)
+}
+#clean the collected data-politics
+#view the first 6 rows
+head(f_pubyr2)
+#remove irrelevant rows (all irrelavent rows contains ")")
+f_pubyr2 %<>% filter(grepl(")",pub_yr)==FALSE)
+#extract the year
+f_pubyr2 %<>% 
+  separate(pub_yr,c("rating","num_ra","year"),"—") %>%
+  separate(year,c(NA,"year"),"published") 
+#trim line breaker
+f_pubyr2$year<-trimws(f_pubyr2$year,which="both")
+#breifly check the value of variable "year" 
+table(f_pubyr2$year,exclude=NULL) 
+                    #9 missing because of incomplete text online                            
+                    #frequency before 1960 all less than 5
+#clean the data for "rating" of book about politics
+#trim line breaker
+f_pubyr2$rating<-trimws(f_pubyr2$rating,which="both")
+#extract number of rating from column "rating"
+f_pubyr2$rating<-substr(f_pubyr2$rating,12,15)
+
+#Run another loop to get book names-politics
+PAGE<-25
+f_pona<-data.frame()
+
+for (i in 1:PAGE) {
+  url <- paste0("https://www.goodreads.com/shelf/show/politics?page=",i)
+  print(url)
+  page <- jump_to(pgsession, url)
+  nds <- html_nodes(page, xpath = '//*[contains(concat( " ", @class, " " ), concat( " ", "bookTitle", " " ))]')
+  politics_name <- html_text(nds)
+  politics_name <- as.data.frame(politics_name)
+  f_pona <- rbind(f_pona,politics_name)
+}
+
+#put name and year in the same dataframe-politics
+f_politics <- cbind(f_pona, f_pubyr2)
+#trim the line breaker
+f_politics$politics_name<-trimws(f_politics$politics_name,which="both")
+#delet whatever is in parentheses
+f_politics$politics_name<-gsub("\\s*\\([^\\)]+\\)","",f_politics$politics_name)
+```
+
+#### List3: Top 200 Books for Each Year
+```{r, message=FALSE}
+#get the names of top 200 books from 1960 to 2019
+YEAR<-2019  #1960-2019
+f_top<-data.frame()
+
+for (i in 1960:YEAR) {
+  url <- paste0("https://www.goodreads.com/book/popular_by_date/",i)
+  page <- jump_to(pgsession, url)
+  nds <- html_nodes(page, xpath = '//*[contains(concat( " ", @class, " " ), concat( " ", "bookTitle", " " ))]//span')
+  top_name <- html_text(nds)
+  top_name <- as.data.frame(top_name)
+  f_top <- rbind(f_top,top_name)
+}
+
+#clean the data
+f_top$top_name<-trimws(f_top$top_name,which="both")
+f_top$top_name<-gsub("\\s*\\([^\\)]+\\)","",f_top$top_name)
+```
+
+## Result
+We expect the number of books about politics to be higher because it is a relatively broader topic and often overlaps with race. We also expected that the number of books in general would be higher in more recent years due to an influx in both self-publishing books and in use of Goodreads.
+race-create plots
+
+### Number of Books about Race
+We see that there has been a huge spike in the number of books published about race in 2013-2014.
+```{r, warning=FALSE}
 #bar chart: Number of books about race per year
 #filter out NA and blank
-f_pubyr %>% 
-  filter(year!="" & year!=1) %>%
+f_race %>% 
+  filter(year!="" & year>=1960) %>%
   group_by(year) %>%
   summarise(total=n()) %>%
   ggplot(aes(year,total,fill=total))+
@@ -91,71 +217,53 @@ f_pubyr %>%
   scale_x_discrete(breaks = seq(1960, 2020, by = 5)) +
   theme(axis.text.x = element_text(angle = 45))
 ```
-clean the data for "rating" of book about race
-```{r}
-#trim line breaker
-f_pubyr$rating<-trimws(f_pubyr$rating,which="both")
-#extract number of rating from column "rating"
-f_pubyr$rating<-substr(f_pubyr$rating,12,15)
+
+### Number of Books about Politics
+There has also been a large increase in the number of political books published per year, but this increase starts earlier and is more gradual than the trend of books about race.
+```{r, warning=FALSE}
+#bar chart: Number of books about politics per year
+#filter out NA and blank
+f_politics %>% 
+  filter(year!="" & year>=1960) %>%
+  group_by(year) %>%
+  summarise(total=n()) %>%
+  ggplot(aes(year,total,fill=total))+
+  geom_col(width=1.2)+
+  scale_fill_continuous(low="light blue", high="blue")+
+  scale_x_discrete(breaks = seq(1960, 2020, by = 5)) +
+  theme(axis.text.x = element_text(angle = 45))
 ```
-Now we have a single column "rating"
+
+### Ratings of Books about Race by Year
 ```{r}
-#check value
-table(f_pubyr$rating,exclude=NULL)
 #line chart: Average rating of books about race by year
-f_pubyr %>%
-  filter(year!="" & year!=1) %>%
+f_race %>%
+  filter(year!="" & year>=1960) %>%
   group_by(year) %>%
   summarise(Mean_rating=mean(as.numeric(rating))) %>%
   ggplot(aes(x=year,y=Mean_rating,group=1))+
   geom_line()+
   ylim(2.75,5)+
-  scale_x_discrete(breaks = seq(1600, 2020, by = 10)) +
+  scale_x_discrete(breaks = seq(1960, 2020, by = 5)) +
   theme(axis.text.x = element_text(angle = 45))
 ```
-Run another loop to get book names
-```{r}
-PAGE<-25
-f_rana<-data.frame()
 
-for (i in 1:PAGE) {
-  url <- paste0("https://www.goodreads.com/shelf/show/race?page=",i)
-  print(url)
-  page <- jump_to(pgsession, url)
-  nds <- html_nodes(page, xpath = '//*[contains(concat( " ", @class, " " ), concat( " ", "bookTitle", " " ))]')
-  race_name <- html_text(nds)
-  race_name <- as.data.frame(race_name)
-  f_rana <- rbind(f_rana,race_name)
-}
-```
-put name and year into the same dataframe
+### Ratings of Books about Politics by Year
 ```{r}
-f_race <- cbind(f_rana, f_pubyr)
+#line chart: Average rating of books about race by year
+f_politics %>%
+  filter(year!="" & year>=1960) %>%
+  group_by(year) %>%
+  summarise(Mean_rating=mean(as.numeric(rating))) %>%
+  ggplot(aes(x=year,y=Mean_rating,group=1))+
+  geom_line()+
+  ylim(2.75,5)+
+  scale_x_discrete(breaks = seq(1960, 2020, by = 5)) +
+  theme(axis.text.x = element_text(angle = 45))
 ```
-####Top 200 Books for Each Year
-get the names of top 200 books from 1960 to 2019
-```{r}
-YEAR<-2019  #1960-2019
-f_top<-data.frame()
 
-for (i in 1960:YEAR) {
-  url <- paste0("https://www.goodreads.com/book/popular_by_date/",i)
-  print(url)
-  page <- jump_to(pgsession, url)
-  nds <- html_nodes(page, xpath = '//*[contains(concat( " ", @class, " " ), concat( " ", "bookTitle", " " ))]//span')
-  top_name <- html_text(nds)
-  top_name <- as.data.frame(top_name)
-  f_top <- rbind(f_top,top_name)
-}
-```
-find intersections between top200 and books about race by year
-```{r}
-#trim the line breaker
-f_race$race_name<-trimws(f_race$race_name,which="both")
-f_top$top_name<-trimws(f_top$top_name,which="both")
-#delet whatever is in parentheses
-f_race$race_name<-gsub("\\s*\\([^\\)]+\\)","",f_race$race_name)
-f_top$top_name<-gsub("\\s*\\([^\\)]+\\)","",f_top$top_name)
+```{r, include=FALSE}
+#find intersections between top200 and books about race by year
 #loop to get the number of race books among the top 200 for each year
 popular_inter1 <- data.frame()
 for (i in 1960:2019) {
@@ -178,101 +286,9 @@ ggplot(popular_inter1,aes(x=year,y=proportion,fill=proportion))+
   ylim(0,0.1)+
   theme(axis.text.x = element_text(angle = 45))
 ```
-####Books about politics
-create loop to get average rating, number of rating, published year
-```{r}
-PAGE<-25
-f_pubyr2<-data.frame()
 
-for (i in 1:PAGE) {
-  url <- paste0("https://www.goodreads.com/shelf/show/politics?page=",i)
-  print(url)
-  page<-jump_to(pgsession, url)
-  nds <- html_nodes(page, xpath = '//*[contains(concat( " ", @class, " " ), concat( " ", "greyText", " " )) and contains(concat( " ", @class, " " ), concat( " ", "smallText", " " ))]')
-  pub_yr <- html_text(nds)
-  pub_yr<-as.data.frame(pub_yr)
-  f_pubyr2<-rbind(f_pubyr2,pub_yr)
-}
-```
-clean the collected data-politics
-```{r}
-#view the first 6 rows
-head(f_pubyr2)
-#remove irrelevant rows (all irrelavent rows contains ")")
-f_pubyr2 %<>% filter(grepl(")",pub_yr)==FALSE)
-#extract the year
-f_pubyr2 %<>% 
-  separate(pub_yr,c("rating","num_ra","year"),"—") %>%
-  separate(year,c(NA,"year"),"published") 
-#trim line breaker
-f_pubyr2$year<-trimws(f_pubyr2$year,which="both")
-```
-Now we have a single column "year" that contains all the "publish year"
-```{r}
-#breifly check the value of variable "year" 
-table(f_pubyr2$year,exclude=NULL) 
-                    #9 missing because of incomplete text online                            
-                    #frequency before 1960 all less than 5
-#bar chart: Number of books about politics per year
-#filter out NA and blank
-f_pubyr2 %>% 
-  filter(year!="" & as.numeric(year)>=1603) %>%
-  group_by(year) %>%
-  summarise(total=n()) %>%
-  ggplot(aes(year,total,fill=total))+
-  geom_col(width=1.2)+
-  scale_fill_continuous(low="light blue", high="blue")+
-  scale_x_discrete(breaks = seq(1960, 2020, by = 5)) +
-  theme(axis.text.x = element_text(angle = 45))
-```
-clean the data for "rating" of book about politics
-```{r}
-#trim line breaker
-f_pubyr2$rating<-trimws(f_pubyr2$rating,which="both")
-#extract number of rating from column "rating"
-f_pubyr2$rating<-substr(f_pubyr2$rating,12,15)
-```
-Now we have a single column "rating"
-```{r}
-#check value
-table(f_pubyr$rating,exclude=NULL)
-#bar chart: Average rating of books about race by year
-f_pubyr2 %>%
-  filter(year!="" & as.numeric(year)>0) %>%
-  group_by(year) %>%
-  summarise(Mean_rating=mean(as.numeric(rating))) %>%
-  ggplot(aes(x=year,y=Mean_rating,group=1))+
-  geom_line()+
-  ylim(2.75,5)+
-  scale_x_discrete(breaks = seq(1600, 2020, by = 10)) +
-  theme(axis.text.x = element_text(angle = 45))
-```
-Run another loop to get book names-politics
-```{r}
-PAGE<-25
-f_pona<-data.frame()
-
-for (i in 1:PAGE) {
-  url <- paste0("https://www.goodreads.com/shelf/show/politics?page=",i)
-  print(url)
-  page <- jump_to(pgsession, url)
-  nds <- html_nodes(page, xpath = '//*[contains(concat( " ", @class, " " ), concat( " ", "bookTitle", " " ))]')
-  politics_name <- html_text(nds)
-  politics_name <- as.data.frame(politics_name)
-  f_pona <- rbind(f_pona,politics_name)
-}
-```
-put name and year in the same dataframe-politics
-```{r}
-f_politics <- cbind(f_pona, f_pubyr2)
-```
-find intersections
-```{r}
-#trim the line breaker
-f_politics$politics_name<-trimws(f_politics$politics_name,which="both")
-#delet whatever is in parentheses
-f_politics$politics_name<-gsub("\\s*\\([^\\)]+\\)","",f_politics$politics_name)
-#loop to get the number of race books among the top 200 for each year
+```{r, include=FALSE}
+#find intersections-politics
 popular_inter <- data.frame()
 for (i in 1960:2019) {
   year_group <- which(f_politics$year==i)
@@ -294,8 +310,9 @@ ggplot(popular_inter,aes(x=year,y=proportion,fill=proportion))+
   ylim(0,0.1)+
   theme(axis.text.x = element_text(angle = 45))
 ```
-intersection: politics and race
-```{r}
+
+```{r, include=FALSE}
+#intersection: politics and race
 pora_inter <- data.frame()
 for (i in 1960:2019) {
   year_group_ra <- which(f_race$year==i)
@@ -320,7 +337,9 @@ ggplot(pora_inter,aes(x=year,y=proportion,fill=proportion))+
   ylim(0,0.1)+
   theme(axis.text.x = element_text(angle = 45))
 ```
-Final Graph: intersection of books about race and politics with top200 booklist in the same plot
+
+### Proportion of Top 200 Books about Race and Politics by Year
+As seen in the bar graphs above, there is a huge spike in books about race around 2013-2014. The percentage of the top 200 books jumps from 2.5% (5 books) to nearly 7.5% (15 books) and then to nearly 10% (20 books) in just a few years. Interestingly, there is no corresponding spike in the proportion of the top-rated 200 books that are about politics.
 ```{r}
 popular_inter1$group<-"race"
 popular_inter$group<-"politics"
