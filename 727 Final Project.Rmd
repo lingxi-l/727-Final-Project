@@ -243,28 +243,21 @@ f_politics %>%
   theme(axis.text.x = element_text(angle = 45))
 ```
 
-### Ratings of Books about Race by Year
+### Ratings of Books about Race and Politics by Year
 ```{r}
-#line chart: Average rating of books about race by year
-f_race %>%
+#combine ratings of books on both topics
+racerate<-f_race %>%
   filter(year!="" & year>=1960) %>%
   group_by(year) %>%
-  summarise(Mean_rating=mean(as.numeric(rating))) %>%
-  ggplot(aes(x=year,y=Mean_rating,group=1))+
-  geom_line()+
-  ylim(3.75,4.5)+
-  scale_x_discrete(breaks = seq(1960, 2020, by = 5)) +
-  theme(axis.text.x = element_text(angle = 45))
-```
-
-### Ratings of Books about Politics by Year
-```{r}
-#line chart: Average rating of books about race by year
-f_politics %>%
+  summarise(race=mean(as.numeric(rating)))
+polirate<-f_politics %>%
   filter(year!="" & year>=1960) %>%
   group_by(year) %>%
-  summarise(Mean_rating=mean(as.numeric(rating))) %>%
-  ggplot(aes(x=year,y=Mean_rating,group=1))+
+  summarise(politics=mean(as.numeric(rating)))
+f_rating<-full_join(racerate, polirate, by="year")
+f_rating %>%
+  gather(key="group", value="rating", 2:3) %>%
+  ggplot(aes(x=year,y=rating, group=group, color=group))+
   geom_line()+
   ylim(3.75,4.5)+
   scale_x_discrete(breaks = seq(1960, 2020, by = 5)) +
@@ -331,19 +324,14 @@ for (i in 1960:2019) {
   pora_inter <- rbind(pora_inter,intersection)
 }
 names(pora_inter)<-"number"
-#calculate the proportion
-pora_inter$proportion <- pora_inter$number/200
 #append column of year
 pora_inter$year <- c(1960:2019)
 pora_inter$year <- as.factor(pora_inter$year)
-#plot of the proportion
-ggplot(pora_inter,aes(x=year,y=proportion))+
-  geom_bar(stat="identity")
-ggplot(pora_inter,aes(x=year,y=proportion,fill=proportion))+
+#plot of the intersection number
+ggplot(pora_inter,aes(x=year,y=number,fill=number))+
   geom_col(width=1)+
   scale_fill_continuous(low="light blue", high="blue")+
   scale_x_discrete(breaks = seq(1960, 2020, by = 5)) +
-  ylim(0,0.1)+
   theme(axis.text.x = element_text(angle = 45))
 ```
 
