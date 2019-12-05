@@ -252,7 +252,7 @@ f_race %>%
   summarise(Mean_rating=mean(as.numeric(rating))) %>%
   ggplot(aes(x=year,y=Mean_rating,group=1))+
   geom_line()+
-  ylim(2.75,5)+
+  ylim(3.75,4.5)+
   scale_x_discrete(breaks = seq(1960, 2020, by = 5)) +
   theme(axis.text.x = element_text(angle = 45))
 ```
@@ -266,7 +266,7 @@ f_politics %>%
   summarise(Mean_rating=mean(as.numeric(rating))) %>%
   ggplot(aes(x=year,y=Mean_rating,group=1))+
   geom_line()+
-  ylim(2.75,5)+
+  ylim(3.75,4.5)+
   scale_x_discrete(breaks = seq(1960, 2020, by = 5)) +
   theme(axis.text.x = element_text(angle = 45))
 ```
