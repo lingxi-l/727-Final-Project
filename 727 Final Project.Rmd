@@ -352,3 +352,5 @@ ggplot(combine,aes(x=year,y=proportion,group=group,color=group))+
   theme(axis.text.x = element_text(angle = 45))
 ```
 
+## References
+Grissom, J. A., J. Nicholson-Crotty, & S. Nicholson-Crotty. (1/9/2009). Race, Region, and Representative Bureaucracy. Public Administration Review, 69(5), 911–919. article, Oxford, UK: Wiley Subscription Services.
