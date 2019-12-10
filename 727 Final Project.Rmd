@@ -83,7 +83,7 @@ filled_form<-set_values(pgform,'user[email]'="kallanlars@gmail.com", 'user[passw
 submit_form(pgsession, filled_form)
 ```
 
-#### List1: Books about race
+##### List1: Books about race
 ```{r, message=FALSE}
 #create loop to get average rating, number of rating, published year
 PAGE<-25
@@ -134,7 +134,7 @@ f_pubyr$rating<-trimws(f_pubyr$rating,which="both")
 f_pubyr$rating<-substr(f_pubyr$rating,12,15)
 ```
 
-```{r}
+```{r, include=FALSE}
 #put name and year into the same dataframe
 f_race <- cbind(f_rana, f_pubyr)
 #trim the line breaker
@@ -143,7 +143,7 @@ f_race$race_name<-trimws(f_race$race_name,which="both")
 f_race$race_name<-gsub("\\s*\\([^\\)]+\\)","",f_race$race_name)
 ```
 
-#### List2: Books about politics
+##### List2: Books about politics
 ```{r, include=FALSE}
 PAGE<-25
 f_pubyr2<-data.frame()
@@ -200,7 +200,7 @@ f_politics$politics_name<-trimws(f_politics$politics_name,which="both")
 f_politics$politics_name<-gsub("\\s*\\([^\\)]+\\)","",f_politics$politics_name)
 ```
 
-#### List3: Top 200 Books for Each Year
+##### List3: Top 200 Books for Each Year
 ```{r, message=FALSE}
 #get the names of top 200 books from 1960 to 2019
 YEAR<-2019  #1960-2019
@@ -223,7 +223,7 @@ f_top$top_name<-gsub("\\s*\\([^\\)]+\\)","",f_top$top_name)
 ## Results
 We expected the number of books about politics to be higher because it is a relatively broader topic and often overlaps with race. We also expected that the number of books in general would be higher in more recent years due to an influx in both self-publishing books and in use of Goodreads.
 
-###Books about Race
+### Books about Race
 ```{r, warning=FALSE}
 #bar chart: Number of books about race per year
 #filter out NA and blank
@@ -385,8 +385,7 @@ ggplot()+
 As seen in the graphs above, there is a huge spike in books about race in the top 200 around 2013-2014, which corresponds to the influx of racially charged news events. The percentage of the top 200 books jumps from 2.5% (5 books) to nearly 7.5% (15 books) and then to nearly 10% (20 books) in just a few years. Interestingly, there is no corresponding spike in the proportion of the top-rated 200 books that are about politics. There is a small spike in 2018, but not on the same scale as the spike for books about race.
 The election of Trump may have contributed to a spike in books about both race and politics, but no other President seems to have had that effect.
 
-##Discussion
-
+## Discussion
 This data shows that the issue salience of race and politics, as measured by the popularity of books on such topics, has increased in recent years. This effect is greater for race than for politics. This result is surprising in that one might expect a greater proportion of the top 200 books in a year to be about politics rather than race because it is a broader topic, but not surprising when put in the context of the Black Lives Matter movement (founded in 2013) and the events that have propelled it. While US elections are a regular occurence, the events that seem to be leading to increased race salience are not and may, therefore, have a more novel effect. 
 
 Our use of Goodreads data is limited -- we cannot refine ratings to include only readers from a specific location (country), we cannot tell whether someone who rated a book actually read the book, and we cannot limit our data to books published in the United States. Accessing demographic data about Goodreads users is also difficult, and of course, there are readers who don’t use Goodreads and citizens who do not read at all. However, we argue that the nature of Goodreads data is such that falsifying whether or not one has read a book is not incentivized; Goodreads ratings do not seem to have a large enough of an impact on the book industry for falsifying reviews to be as common as it might be on, for example, business review sites such as Yelp. As Goodreads becomes more mainstream, this may change.
