@@ -13,6 +13,7 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+
 ## Motivation
 Issue salience is an important aspect of studies of sociopolitical life and specifically voter behavior. “Issue voting” is a foundational theory in political science (Carmines & Stimson 1980). A political figure’s involvement in salient issues has a substantial impact on her approval ratings (Edwards, Mitchell, & Welch 1995).
 
@@ -46,13 +47,17 @@ event<-c('March on Washington', 'Death of Malcolm X', 'Death of MLK', 'LA Riots'
 eventyear<-c(1963,1966,1968,1992,2008,2012,2013,2014,2015,2017)
 raceevents<-data.frame(event,eventyear)
 ```
+
 ## Research Questions
 How salient are the issues of race and politics to the public, and how has the salience of these topics changed over time? Does the popularity of books about race correspond with important events pertaining to race in the United States, and/or does the popularity of books about politics correspond with important political events in the United States? To what extent does the popularity of books about race and politics overlap?
+
 ## Data
+
 ### Source
 In this paper, we use a measure of issue salience that, to our knowledge, has never been used for this purpose: Goodreads data. Goodreads is a social networking website that allows users to flag books they have read or want to read and post reviews and ratings of the books. As of July 2019, Goodreads had more than 90 million users, more than 10 million books added to its online catalogs, 50 million unique visitors per month, and more than 50 million user reviews.  Users can also “tag” books, a feature that is used to mark books as being part of a certain genre or being about certain topics, among others. Goodreads compiles lists of books that share a tag, which makes comparisons of books that share characteristics fairly convenient. It is these lists that we use to measure issue salience.
 
 Publishers often share the most popular genres of books each year, but this is usually based on book sales, not reader opinions, and genres are not crystallized enough to be informative about issue salience. For example, there could be both novels and non-fiction books making powerful statements about race in a given year, but publisher data does not reflect that. Goodreads allows books from all publishers to be gathered in one place, and topics are available on a more granular level, although we have to rely on users to tag books as being about the topics of interest. The Pew Research Center reports that more Americans, especially young Americans, are turning to books to research specific topics (Perrin 2016), which leads us to believe that data about the books people are choosing to read is a promising source of information pertaining to issue salience.
+
 ### Gathering
 We utilized SelectorGadget to scrape three lists found on Goodreads: books about Race, books about Politics, and the top 200 books published in years 1960-2015. The first two lists have the 1250 books that have been “shelved as” (tagged as) the topic of interest the highest number of times. For example, the number one book on the race list is Between the World and Me by Ta-Nehesi Coates, which has been tagged as “race” 1023 times. On each of these lists, we have the names of the books, their authors, the average rating of the books (with a maximum rating of 5.0), the number of ratings, and the year published.
 
@@ -214,8 +219,10 @@ for (i in 1960:YEAR) {
 f_top$top_name<-trimws(f_top$top_name,which="both")
 f_top$top_name<-gsub("\\s*\\([^\\)]+\\)","",f_top$top_name)
 ```
+
 ## Results
 We expected the number of books about politics to be higher because it is a relatively broader topic and often overlaps with race. We also expected that the number of books in general would be higher in more recent years due to an influx in both self-publishing books and in use of Goodreads.
+
 ### Books about Race
 ```{r, warning=FALSE}
 #bar chart: Number of books about race per year
@@ -232,6 +239,7 @@ f_race %>%
   theme(axis.text.x = element_text(angle = 45))
 ```
 We see that there has been a huge spike in the number of books published about race, starting around 2014.
+
 ### Books about Politics
 ```{r, warning=FALSE}
 #bar chart: Number of books about politics per year
@@ -272,6 +280,7 @@ ggplot(pora_inter,aes(x=year,y=number,fill=number))+
   theme(axis.text.x = element_text(angle = 45))
 ```
 The intersection of race and politics, at least as tagged by Goodreads users, is much lower than expected. The highest intersection is 15 books and occurs in 2016.
+
 ### Ratings of Books about Race and Politics by Year
 ```{r}
 #combine ratings of books on both topics
@@ -294,6 +303,7 @@ f_rating %>%
   theme(axis.text.x = element_text(angle = 45))
 ```
 Analysis of average ratings by year is not very informative, as ratings of books about race seem to be relatively similar throughout the time period of interest. Almost all average ratings are between 3.9 and 4.3. Note that there is a gap in the politics line in 1977. No books written in 1977 were tagged as being about politics. If they were tagged, they were not rated at all.
+
 ### Proportion of Books in Top 200 Books by Year
 ```{r, include=FALSE}
 #find intersections between top200 and books about race by year
@@ -372,6 +382,7 @@ ggplot()+
 ```
 As seen in the graphs above, there is a huge spike in books about race in the top 200 around 2013-2014, which corresponds to the influx of racially charged news events. The percentage of the top 200 books jumps from 2.5% (5 books) to nearly 7.5% (15 books) and then to nearly 10% (20 books) in just a few years. Interestingly, there is no corresponding spike in the proportion of the top-rated 200 books that are about politics. There is a small spike in 2018, but not on the same scale as the spike for books about race.
 The election of Trump may have contributed to a spike in books about both race and politics, but no other President seems to have had that effect.
+
 ## Discussion
 This data shows that the issue salience of race and politics, as measured by the popularity of books on such topics, has increased in recent years. This effect is greater for race than for politics. This result is surprising in that one might expect a greater proportion of the top 200 books in a year to be about politics rather than race because it is a broader topic, but not surprising when put in the context of the Black Lives Matter movement (founded in 2013) and the events that have propelled it. While US elections are a regular occurence, the events that seem to be leading to increased race salience are not and may, therefore, have a more novel effect. 
 
@@ -383,6 +394,7 @@ Additionally, the tagging feature on Goodreads is subject to error. It is plausi
 Our selection of important racial and political events is yet another limitation of this analysis; one could reasonably do the same analysis using an entirely different set of events. Making any sort of causal inference based on historical events is a lofty task, however, and we are confident that our selected dates were of some importance. Future research might explore the salience of other issues using Goodreads data or move on to sites such as Letterboxd, which is a site very similar to Goodreads used for tracking films rather than books. 
 
 This research is the first, to our knowledge, to use Goodreads data as a measure of issue salience. When studied in the context of historical events, there seems to be a relationship between the popularity of books on race and politics and the events that might spark that increased salience. Despite substantial potential for errors of representation, it is an exciting and innovative use of a unique source of found data.
+
 ## References
 Bartle, J., & Laycock, S. (12/2012). Telling more than they can know? Does the most important issue really reveal what is most important to voters? Electoral Studies, 31(4), 679–688. Elsevier Ltd.
 
@@ -399,5 +411,6 @@ Grissom, J. A., J. Nicholson-Crotty, & S. Nicholson-Crotty. (1/9/2009). Race, Re
 Mayhew, D. R. 1991. Divided We Govern. New Haven: Yale University Press.
 
 Perrin, A. (2016). "Book Reading 2016." Pew Research Center. https://www.pewresearch.org/internet/2016/09/01/book-reading-2016/
+
 ## Github Link
 https://github.com/lingxi-l/727-Final-Project
