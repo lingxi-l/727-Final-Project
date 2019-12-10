@@ -238,6 +238,7 @@ f_race %>%
   ggtitle("Number of Books about Race") +
   theme(axis.text.x = element_text(angle = 45))
 ```
+
 We see that there has been a huge spike in the number of books published about race, starting around 2014.
 
 ### Books about Politics
@@ -380,6 +381,7 @@ ggplot()+
   ylim(0,0.116)+
   theme(axis.text.x = element_text(angle = 45))
 ```
+
 As seen in the graphs above, there is a huge spike in books about race in the top 200 around 2013-2014, which corresponds to the influx of racially charged news events. The percentage of the top 200 books jumps from 2.5% (5 books) to nearly 7.5% (15 books) and then to nearly 10% (20 books) in just a few years. Interestingly, there is no corresponding spike in the proportion of the top-rated 200 books that are about politics. There is a small spike in 2018, but not on the same scale as the spike for books about race.
 The election of Trump may have contributed to a spike in books about both race and politics, but no other President seems to have had that effect.
 
