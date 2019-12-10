@@ -379,6 +379,7 @@ ggplot()+
   scale_x_continuous(breaks = seq(1960, 2020, by = 4))+
   ylim(0,0.116)+
   theme(axis.text.x = element_text(angle = 45))
+
 ```
 As seen in the bar graphs above, there is a huge spike in books about race around 2013-2014. The percentage of the top 200 books jumps from 2.5% (5 books) to nearly 7.5% (15 books) and then to nearly 10% (20 books) in just a few years. Interestingly, there is no corresponding spike in the proportion of the top-rated 200 books that are about politics. There is a small spike in 2018, but not on the same scale as the spike for books about race.
 
