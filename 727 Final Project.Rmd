@@ -13,17 +13,17 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 ## Motivation
-Issue salience is an important aspect of studies of sociopolitical life and specifically voter behavior. “Issue voting” is a 	Issue salience is an important aspect of studies of sociopolitical life and specifically voter behavior. “Issue voting” is a foundational theory in political science (Carmines & Stimson 1980). A political figure’s involvement in salient issues has a substantial impact on her approval ratings (Edwards et al 1995).
+Issue salience is an important aspect of studies of sociopolitical life and specifically voter behavior. “Issue voting” is a foundational theory in political science (Carmines & Stimson 1980). A political figure’s involvement in salient issues has a substantial impact on her approval ratings (Edwards, Mitchell, & Welch 1995).
 
 Not every measurement of issue salience is appropriate for every research question. Mayhew (1991) outlines this distinction temporally; measures of retrospective and contemporaneous issue salience may differ from one another. Additionally, it is important to determine whether one wants to study political elites or popular issue salience, as the sources of issue salience for each may be quite different. Whether a case concerning an issue is included in constitutional law books (Danelski 1989), for example, may be an important factor in determining the salience of that issue for those in the field of law, but not for a layperson who has never opened a constitutional law book.
 
 The issues that are salient to political elites (e.g., legislators, justices, and other politicians) may have a notable effect on policies that are put into place. Popular salience, however, can both influence political elites and be influenced by new policies enacted by political elites. In Epstein and Segal’s (2000) study of issue salience to US Supreme Court justices, they use media coverage to measure issue salience. This may be a rare source that could measure issue salience for all consumers of media, regardless of whether they are politicians or not. Indeed, many researchers continue to analyze media coverage of Donald Trump and Hillary Clinton leading up to the 2016 US Presidential Election. However, using media coverage as a measures of issue salience requires heroic assumptions regarding uniform media exposure -- people do not read, watch, or listen to the same news sources, let alone the same stories, for the same amount of time each day, so stimuli vary immensely.
 
-Many political polls ask voters to report the most important issue to them, but Bartle & Laycock (2012) find limited evidence that these measures actually influence voting behavior. They posit that respondents are reporting what they observe as being important to other voters, not necessarily what is most important for them personally. Found data such as Twitter data can be used to get a real-time picture of popular sentiment regarding candidates and political issues, but tweets can be sent out in a matter of seconds and therefore may not represent crystallized issue salience.
+Many political polls ask voters to report the most important issue to them, but Bartle & Laycock (2012) find limited evidence that these measures actually influence voting behavior. They posit that respondents are reporting what they observe as being important to other voters, not necessarily what is most important for them personally. Found data such as Twitter data can be used to get a real-time picture of popular sentiment regarding candidates and political issues, but tweets can be sent out in a matter of seconds and therefore may not represent crystallized issue salience or issue salience over long periods of time.
 
-From an observational standpoint, race seems to be a topic that has become more and more popular in media -- whether films, literature, or public discourse. Race salience has important implications for public policy. As an example, Grissom, Nicholson-Crotty, and Nicholson-Crotty (2009) demonstrate that the benefits afforded to Black students by Black teachers differs by region according to the salience of race in a particular region. 
+From an observational standpoint, race seems to be a topic that has become more and more popular in media -- whether films, literature, or public discourse. Race salience has important implications for public policy. As an example, Grissom, Nicholson-Crotty, and Nicholson-Crotty (2009) demonstrate that the benefits afforded to Black students by Black teachers differs by region according to the salience of race in a particular region.
 
-We seek to understand the issue salience of race over time, from 1960 to present. We do so in the context of the following important events for African-American race relations in the United States:
+We seek to understand the issue salience of race over time, from 1960 to present. We do so in the context of the following important events for African-Americans in the United States:
 1963: March on Washington; Martin Luther King, Jr.’s “I Have a Dream” speech
 1966: Assassination of Malcolm X
 1968: Assassination of Martin Luther King, Jr.
@@ -33,7 +33,7 @@ We seek to understand the issue salience of race over time, from 1960 to present
 2014: Deaths of Michael Brown and Eric Gardner at hands of police
 2015: Charleston Church Shooting; death of Sandra Bland in jail
 
-As a comparison, we observe the issue salience of politics in the context of election years since 1960 (1960, 1964, 1968, 1972, 1976, 1980, 1984, 1988, 1992, 1996, 2000, 2004, 2008, 2012, and 2016).
+As a comparison, we observe the issue salience of politics in the context of American election years since 1960 (these occur every four years).
 
 ## Research Question
 How salient are the issues of race and politics to the public, and how has the salience of these topics changed over time? Does the popularity of books about race correspond with important events pertaining to race in the United States, and/or does the popularity of books about politics correspond with important political events in the United States? To what extent does the popularity of books about race and politics overlap?
@@ -41,9 +41,12 @@ How salient are the issues of race and politics to the public, and how has the s
 ## Data
 ### Source
 In this paper, we use a measure of issue salience that, to our knowledge, has never been used for this purpose: Goodreads data. Goodreads is a social networking website that allows users to flag books they have read or want to read and post reviews and ratings of the books. As of July 2019, Goodreads had more than 90 million users, more than 10 million books added to its online catalogs, 50 million unique visitors per month, and more than 50 million user reviews.  Users can also “tag” books, a feature that is used to mark books as being part of a certain genre or being about certain topics, among others. Goodreads compiles lists of books that share a tag, which makes comparisons of books that share characteristics fairly convenient. It is these lists that we use to measure issue salience.
-Publishers often share the most popular genres of books each year, but this is usually based on book sales, not reader opinions, and genres are not crystallized enough to be informative about issue salience. For example, there could be both novels and non-fiction books making powerful statements about race in a given year, but publisher data does not reflect that. Goodreads allows books from all publishers to be gathered in one place, and topics are available on a more granular level, although we have to rely on users to tag books as being about the topics of interest.
+Publishers often share the most popular genres of books each year, but this is usually based on book sales, not reader opinions, and genres are not crystallized enough to be informative about issue salience. For example, there could be both novels and non-fiction books making powerful statements about race in a given year, but publisher data does not reflect that. Goodreads allows books from all publishers to be gathered in one place, and topics are available on a more granular level, although we have to rely on users to tag books as being about the topics of interest. The Pew Research Center reports that more Americans, especially young Americans, are turning to books to research specific topics (Perrin 2016), which leads us to believe that data about the books people are choosing to read is a promising source of information pertaining to issue salience.
 
 ### Gathering
+We utilized SelectorGadget to scrape three lists found on Goodreads: books about Race, books about Politics, and the top 200 books published in years 1960-2015. The first two lists have the 1250 books that have been “shelved as” (tagged as) the topic of interest the highest number of times. For example, the number one book on the race list is Between the World and Me by Ta-Nehesi Coates, which has been tagged as “race” 1023 times. On each of these lists, we have the names of the books, their authors, the average rating of the books (with a maximum rating of 5.0), the number of ratings, and the year published.
+
+Using R, we parsed the scraped data to create a dataset consisting of each of the metrics listed above as unique variables. We used text matching to match books that appear one more than one of the lists to analyze overlep between the two topics. Our major variables of interest were 1) the number of books about race and politics over time, 2) the average rating of books about race and politics each year, 3) the proportion of the top 200 popular books from each year that were about race and politics, and 4) the intersection of these measures (books tagged as both race and politics).
 ```{r, include=FALSE}
 library(xml2)
 library(rvest)
@@ -66,9 +69,6 @@ pgform<-html_form(pgsession)[[1]] #in this case the submit is the 1st form
 filled_form<-set_values(pgform,'user[email]'="kallanlars@gmail.com", 'user[password]'= "727project")
 submit_form(pgsession, filled_form)
 ```
-We utilized SelectorGadget to scrape three lists found on Goodreads: books about Race, books about Politics, and the top 200 books published in years 1960-2015. The first two lists have the 1250 books that have been “shelved as” (tagged as) the topic of interest the highest number of times. For example, the number one book on the race list is Between the World and Me by Ta-Nehesi Coates, which has been tagged as “race” 1023 times. On each of these lists, we have the names of the books, their authors, the average rating of the books (with a maximum rating of 5.0), the number of ratings, and the year published.
-
-Using R, we parsed the scraped data to create a dataset consisting of each of the metrics listed above as unique variables. We used text matching to match books that appear one more than one of the lists to analyze overlap. Our major variables of interest were 1) the number of books about race and politics over time, 2) the average rating of books about race and politics each year, 3) the proportion of the top 200 popular books from each year that were about race and politics, and 4) the overlap these measures with books tagged as both race and politics.
 
 #### List1: Books about race
 ```{r, message=FALSE}
@@ -223,7 +223,7 @@ f_race %>%
   ggplot(aes(year,total,fill=total))+
   geom_col(width=1.3)+
   scale_fill_continuous(low="light blue", high="blue")+
-  scale_x_discrete(breaks = seq(1960, 2020, by = 5)) +
+  scale_x_discrete(breaks = seq(1960, 2020, by = 4)) +
   theme(axis.text.x = element_text(angle = 45))
 ```
 
@@ -239,7 +239,7 @@ f_politics %>%
   ggplot(aes(year,total,fill=total))+
   geom_col(width=1.2)+
   scale_fill_continuous(low="light blue", high="blue")+
-  scale_x_discrete(breaks = seq(1960, 2020, by = 5)) +
+  scale_x_discrete(breaks = seq(1960, 2020, by = 4)) +
   theme(axis.text.x = element_text(angle = 45))
 ```
 
@@ -260,7 +260,7 @@ f_rating %>%
   ggplot(aes(x=year,y=rating, group=group, color=group))+
   geom_line()+
   ylim(3.75,4.5)+
-  scale_x_discrete(breaks = seq(1960, 2020, by = 5)) +
+  scale_x_discrete(breaks = seq(1960, 2020, by = 4)) +
   theme(axis.text.x = element_text(angle = 45))
 ```
 
@@ -284,7 +284,7 @@ popular_inter1$year <- as.factor(popular_inter1$year)
 ggplot(popular_inter1,aes(x=year,y=proportion,fill=proportion))+
   geom_col(width=1)+
   scale_fill_continuous(low="light blue", high="blue")+
-  scale_x_discrete(breaks = seq(1960, 2020, by = 5)) +
+  scale_x_discrete(breaks = seq(1960, 2020, by = 4)) +
   ylim(0,0.1)+
   theme(axis.text.x = element_text(angle = 45))
 ```
@@ -308,7 +308,7 @@ popular_inter$year <- as.factor(popular_inter$year)
 ggplot(popular_inter,aes(x=year,y=proportion,fill=proportion))+
   geom_col(width=1)+
   scale_fill_continuous(low="light blue", high="blue")+
-  scale_x_discrete(breaks = seq(1960, 2020, by = 5)) +
+  scale_x_discrete(breaks = seq(1960, 2020, by = 4)) +
   ylim(0,0.1)+
   theme(axis.text.x = element_text(angle = 45))
 ```
@@ -331,7 +331,7 @@ pora_inter$year <- as.factor(pora_inter$year)
 ggplot(pora_inter,aes(x=year,y=number,fill=number))+
   geom_col(width=1)+
   scale_fill_continuous(low="light blue", high="blue")+
-  scale_x_discrete(breaks = seq(1960, 2020, by = 5)) +
+  scale_x_discrete(breaks = seq(1960, 2020, by = 4)) +
   theme(axis.text.x = element_text(angle = 45))
 ```
 
@@ -344,7 +344,7 @@ combine<-rbind(popular_inter1, popular_inter)
 
 ggplot(combine,aes(x=year,y=proportion,group=group,color=group))+
   geom_line()+
-  scale_x_discrete(breaks = seq(1960, 2020, by = 5)) +
+  scale_x_discrete(breaks = seq(1960, 2020, by = 4)) +
   ylim(0,0.116)+
   theme(axis.text.x = element_text(angle = 45))
 ```
@@ -358,4 +358,11 @@ Our selection of important racial and political events is yet another limitation
 This research is the first, to our knowledge, to use Goodreads data as a measure of issue salience. When studied in the context of historical events, there seems to be a relationship between the popularity of books on race and politics and the events that might spark that increased salience. Despite substantial potential for errors of representation, it is an exciting and innovative use of a unique source of found data.
 
 ## References
+Bartle, J., & Laycock, S. (12/2012). Telling more than they can know? Does the most important issue really reveal what is most important to voters? Electoral Studies, 31(4), 679–688. Elsevier Ltd.
+Carmines, E. G., & J. A. Stimson. (1/3/1980). The Two Faces of Issue Voting. The American Political Science Review, 74(1), 78–91. The American Political Science Association.
+Danelski, D. J. 1989. "The Influence of the Chief Justice in the Decisional Process of the Supreme Court." In American Court Systems, ed. Sheldon Goldman and Austin Sarat. New York: Longman.
+Edwards, G. C., W. Mitchell, & R. Welch. (1995). Explaining Presidential Approval: The Significance of Issue Salience. American Journal of Political Science, 39(1), 108-134. University of Wisconsin Press.
+Epstein, L., & J. A. Segal. (1/1/2000). Measuring Issue Salience. American Journal of Political Science, 44(1), 66–83. University of Wisconsin Press.
 Grissom, J. A., J. Nicholson-Crotty, & S. Nicholson-Crotty. (1/9/2009). Race, Region, and Representative Bureaucracy. Public Administration Review, 69(5), 911–919. article, Oxford, UK: Wiley Subscription Services.
+Mayhew, D. R. 1991. Divided We Govern. New Haven: Yale University Press.
+Perrin, A. (2016). "Book Reading 2016." Pew Research Center. https://www.pewresearch.org/internet/2016/09/01/book-reading-2016/
