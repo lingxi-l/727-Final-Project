@@ -192,7 +192,6 @@ for (i in 1:PAGE) {
   politics_name <- as.data.frame(politics_name)
   f_pona <- rbind(f_pona,politics_name)
 }
-
 #put name and year in the same dataframe-politics
 f_politics <- cbind(f_pona, f_pubyr2)
 #trim the line breaker
@@ -214,7 +213,6 @@ for (i in 1960:YEAR) {
   top_name <- as.data.frame(top_name)
   f_top <- rbind(f_top,top_name)
 }
-
 #clean the data
 f_top$top_name<-trimws(f_top$top_name,which="both")
 f_top$top_name<-gsub("\\s*\\([^\\)]+\\)","",f_top$top_name)
@@ -223,7 +221,6 @@ f_top$top_name<-gsub("\\s*\\([^\\)]+\\)","",f_top$top_name)
 ## Results
 We expected the number of books about politics to be higher because it is a relatively broader topic and often overlaps with race. We also expected that the number of books in general would be higher in more recent years due to an influx in both self-publishing books and in use of Goodreads.
 
-### Books about Race
 ```{r, warning=FALSE}
 #bar chart: Number of books about race per year
 #filter out NA and blank
@@ -240,7 +237,6 @@ f_race %>%
 ```
 We see that there has been a huge spike in the number of books published about race, starting around 2014.
 
-### Books about Politics
 ```{r, warning=FALSE}
 #bar chart: Number of books about politics per year
 #filter out NA and blank
@@ -281,7 +277,6 @@ ggplot(pora_inter,aes(x=year,y=number,fill=number))+
 ```
 The intersection of race and politics, at least as tagged by Goodreads users, is much lower than expected. The highest intersection is 15 books and occurs in 2016.
 
-### Ratings of Books about Race and Politics by Year
 ```{r}
 #combine ratings of books on both topics
 racerate<-f_race %>%
@@ -304,7 +299,6 @@ f_rating %>%
 ```
 Analysis of average ratings by year is not very informative, as ratings of books about race seem to be relatively similar throughout the time period of interest. Almost all average ratings are between 3.9 and 4.3. Note that there is a gap in the politics line in 1977. No books written in 1977 were tagged as being about politics. If they were tagged, they were not rated at all.
 
-### Proportion of Books in Top 200 Books by Year
 ```{r, include=FALSE}
 #find intersections between top200 and books about race by year
 #loop to get the number of race books among the top 200 for each year
