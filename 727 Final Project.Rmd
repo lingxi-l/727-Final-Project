@@ -360,28 +360,31 @@ popular_inter1$group<-"race"
 popular_inter$group<-"politics"
 combine<-rbind(popular_inter1, popular_inter)
 combine$year<-as.numeric(as.character(combine$year))
-
+```
+```{r}
 #election
 ggplot()+
   geom_line(data=combine,aes(x=year,y=proportion,group=group,color=group))+
-  geom_vline(data=elections, aes(xintercept=year), color="blue",size=0.2)+
-  geom_text(data=elections, aes(x=year, y=0, label=president),size=2.5, angle=90, vjust=-0.4, hjust=0)+
+  geom_vline(data=elections, aes(xintercept=year), color="dimgray",size=0.2)+
+  geom_text(data=elections, aes(x=year, y=0.09, label=president),size=2.5, angle=90, vjust=-0.4, hjust=0)+
   ggtitle("Proportion of Books in Top 200 by Topic")+
   scale_x_continuous(breaks = seq(1960, 2020, by = 4))+
   ylim(0,0.116)+
   theme(axis.text.x = element_text(angle = 45))
+```
+```{r}
 #race events
 ggplot()+
   geom_line(data=combine,aes(x=year,y=proportion,group=group,color=group))+
-  geom_vline(data=raceevents, aes(xintercept=eventyear), color="blue",size=0.2)+
-  geom_text(data=raceevents, aes(x=eventyear, y=0, label=event),size=2.5, angle=90, vjust=-0.4, hjust=0)+
+  geom_vline(data=raceevents, aes(xintercept=eventyear), color="dimgrey",size=0.2)+
+  geom_text(data=raceevents, aes(x=eventyear, y=0.09, label=event),size=2, angle=90, vjust=-0.4, hjust=0)+
   ggtitle("Proportion of Books in Top 200 by Topic")+
   scale_x_continuous(breaks = seq(1960, 2020, by = 4))+
   ylim(0,0.116)+
   theme(axis.text.x = element_text(angle = 45))
-
 ```
-As seen in the bar graphs above, there is a huge spike in books about race around 2013-2014. The percentage of the top 200 books jumps from 2.5% (5 books) to nearly 7.5% (15 books) and then to nearly 10% (20 books) in just a few years. Interestingly, there is no corresponding spike in the proportion of the top-rated 200 books that are about politics. There is a small spike in 2018, but not on the same scale as the spike for books about race.
+As seen in the graphs above, there is a huge spike in books about race in the top 200 around 2013-2014, which corresponds to the influx of racially charged news events. The percentage of the top 200 books jumps from 2.5% (5 books) to nearly 7.5% (15 books) and then to nearly 10% (20 books) in just a few years. Interestingly, there is no corresponding spike in the proportion of the top-rated 200 books that are about politics. There is a small spike in 2018, but not on the same scale as the spike for books about race.
+The election of Trump may have contributed to a spike in books about both race and politics, but no other President seems to have had that effect.
 
 
 ##Discussion
