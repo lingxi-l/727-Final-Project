@@ -357,8 +357,8 @@ popular_inter1$group<-"race"
 popular_inter$group<-"politics"
 combine<-rbind(popular_inter1, popular_inter)
 
-ggplot(combine,aes(x=year,y=proportion,group=group,color=group))+
-  geom_line()+
+ggplot(data=combine,aes(x=year,y=proportion,group=group,color=group))+
+  geom_line(data=combine)+
   ggtitle("Proportion of Books in Top 200 by Topic")+
   scale_x_discrete(breaks = seq(1960, 2020, by = 4)) +
   ylim(0,0.116)+
