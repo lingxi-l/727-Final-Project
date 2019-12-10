@@ -58,6 +58,7 @@ Publishers often share the most popular genres of books each year, but this is u
 We utilized SelectorGadget to scrape three lists found on Goodreads: books about Race, books about Politics, and the top 200 books published in years 1960-2015. The first two lists have the 1250 books that have been “shelved as” (tagged as) the topic of interest the highest number of times. For example, the number one book on the race list is Between the World and Me by Ta-Nehesi Coates, which has been tagged as “race” 1023 times. On each of these lists, we have the names of the books, their authors, the average rating of the books (with a maximum rating of 5.0), the number of ratings, and the year published.
 
 Using R, we parsed the scraped data to create a dataset consisting of each of the metrics listed above as unique variables. We used text matching to match books that appear one more than one of the lists to analyze overlep between the two topics. Our major variables of interest were 1) the number of books about race and politics over time, 2) the average rating of books about race and politics each year, 3) the proportion of the top 200 popular books from each year that were about race and politics, and 4) the intersection of these measures (books tagged as both race and politics).
+
 ```{r, include=FALSE}
 library(xml2)
 library(rvest)
@@ -302,7 +303,7 @@ f_rating %>%
 ```
 Analysis of average ratings by year is not very informative, as ratings of books about race seem to be relatively similar throughout the time period of interest. Almost all average ratings are between 3.9 and 4.3. Note that there is a gap in the politics line in 1977. No books written in 1977 were tagged as being about politics. If they were tagged, they were not rated at all.
 
-###Proportion of Books in Top 200 Books of Year
+### Proportion of Books in Top 200 Books by Year
 ```{r, include=FALSE}
 #find intersections between top200 and books about race by year
 #loop to get the number of race books among the top 200 for each year
@@ -328,6 +329,7 @@ ggplot(popular_inter1,aes(x=year,y=proportion,fill=proportion))+
   ggtitle("Proportion of Books about Race in Most Popular Books of Year") +
   theme(axis.text.x = element_text(angle = 45))
 ```
+
 ```{r, include=FALSE}
 #find intersections-politics
 popular_inter <- data.frame()
@@ -352,15 +354,29 @@ ggplot(popular_inter,aes(x=year,y=proportion,fill=proportion))+
   ylim(0,0.1)+
   theme(axis.text.x = element_text(angle = 45))
 ```
+
 ```{r}
 popular_inter1$group<-"race"
 popular_inter$group<-"politics"
 combine<-rbind(popular_inter1, popular_inter)
+combine$year<-as.numeric(as.character(combine$year))
 
-ggplot(combine,aes(x=year,y=proportion,group=group,color=group))+
-  geom_line()+
+#election
+ggplot()+
+  geom_line(data=combine,aes(x=year,y=proportion,group=group,color=group))+
+  geom_vline(data=elections, aes(xintercept=year), color="blue",size=0.2)+
+  geom_text(data=elections, aes(x=year, y=0, label=president),size=2.5, angle=90, vjust=-0.4, hjust=0)+
   ggtitle("Proportion of Books in Top 200 by Topic")+
-  scale_x_discrete(breaks = seq(1960, 2020, by = 4)) +
+  scale_x_continuous(breaks = seq(1960, 2020, by = 4))+
+  ylim(0,0.116)+
+  theme(axis.text.x = element_text(angle = 45))
+#race events
+ggplot()+
+  geom_line(data=combine,aes(x=year,y=proportion,group=group,color=group))+
+  geom_vline(data=raceevents, aes(xintercept=eventyear), color="blue",size=0.2)+
+  geom_text(data=raceevents, aes(x=eventyear, y=0, label=event),size=2.5, angle=90, vjust=-0.4, hjust=0)+
+  ggtitle("Proportion of Books in Top 200 by Topic")+
+  scale_x_continuous(breaks = seq(1960, 2020, by = 4))+
   ylim(0,0.116)+
   theme(axis.text.x = element_text(angle = 45))
 ```
