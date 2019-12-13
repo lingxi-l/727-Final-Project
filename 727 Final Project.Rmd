@@ -292,6 +292,7 @@ f_rating %>%
   gather(key="group", value="rating", 2:3) %>%
   ggplot(aes(x=year,y=rating, group=group, color=group))+
   geom_line()+
+  geom_smooth()+
   ylim(3.75,4.5)+
   ggtitle("Average Book Ratings Over Time by Topic") +
   scale_x_discrete(breaks = seq(1960, 2020, by = 4)) +
@@ -356,6 +357,7 @@ combine$year<-as.numeric(as.character(combine$year))
 #election
 ggplot()+
   geom_line(data=combine,aes(x=year,y=proportion,group=group,color=group))+
+  geom_smooth(data=combine,aes(x=year,y=proportion,group=group,color=group))+
   geom_vline(data=elections, aes(xintercept=year), color="dimgray",size=0.2)+
   geom_text(data=elections, aes(x=year, y=0.09, label=president),size=2.5, angle=90, vjust=-0.4, hjust=0)+
   ggtitle("Proportion of Books in Top 200 by Topic")+
@@ -367,6 +369,7 @@ ggplot()+
 #race events
 ggplot()+
   geom_line(data=combine,aes(x=year,y=proportion,group=group,color=group))+
+  geom_smooth(data=combine,aes(x=year,y=proportion,group=group,color=group))+
   geom_vline(data=raceevents, aes(xintercept=eventyear), color="dimgrey",size=0.2)+
   geom_text(data=raceevents, aes(x=eventyear, y=0.09, label=event),size=2, angle=90, vjust=-0.4, hjust=0)+
   ggtitle("Proportion of Books in Top 200 by Topic")+
