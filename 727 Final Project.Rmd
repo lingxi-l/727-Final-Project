@@ -26,15 +26,15 @@ Many political polls ask voters to report the most important issue to them, but 
 From an observational standpoint, race seems to be a topic that has become more and more popular in media -- whether films, literature, or public discourse. Race salience has important implications for public policy. As an example, Grissom, Nicholson-Crotty, and Nicholson-Crotty (2009) demonstrate that the benefits afforded to Black students by Black teachers differs by region according to the salience of race in a particular region.
 
 We seek to understand the issue salience of race over time, from 1960 to present. We do so in the context of the following important events for African-Americans in the United States:
-1963: March on Washington; Martin Luther King, Jr.’s “I Have a Dream” speech
-1966: Assassination of Malcolm X
-1968: Assassination of Martin Luther King, Jr.
-1992: Riots in Los Angeles following the arrest and beating of Rodney King
-2008: Barack Obama elected 44th President
-2012: Shooting of Trayvon Martin
-2014: Ferguson, Missouri Protests
-2015: Charleston Church Shooting; death of Sandra Bland in jail
-2017: Charlottesville car attack
+1963: March on Washington; Martin Luther King, Jr.’s “I Have a Dream” speech. 
+1966: Assassination of Malcolm X. 
+1968: Assassination of Martin Luther King, Jr. 
+1992: Riots in Los Angeles following the arrest and beating of Rodney King. 
+2008: Barack Obama elected 44th President. 
+2012: Shooting of Trayvon Martin. 
+2014: Ferguson, Missouri Protests. 
+2015: Charleston Church Shooting; death of Sandra Bland in jail. 
+2017: Charlottesville car attack. 
 
 As a comparison, we observe the issue salience of politics in the context of American presidents since 1960 (11 presidents, with elections occur every four years).
 ```{r, include=FALSE}
